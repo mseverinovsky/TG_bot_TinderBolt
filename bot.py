@@ -4,13 +4,8 @@ from telegram.ext import (ApplicationBuilder, MessageHandler, filters,
 from gpt import *
 from util import *
 
-
 with open("resources/token.txt", "r", encoding="utf-8") as f:
-    line = f.readline()
-    TOKEN = line
-    # print(TOKEN)
-    # print(line)
-# TOKEN = "8256124089:AAFVbiCcyyAvXmVpaMt3bSQrYOr3V94U4dw"
+    TOKEN = f.readline()
 
 async def start(update, context):
     # await send_photo(update, context, "avatar_main")
@@ -20,10 +15,11 @@ async def start(update, context):
 
 async def hello(update, context):
     # await send_text(update, context, "Hello " + update.message.text)
-    await send_text_buttons(update, context, "Hello " + update.message.text, {
-        "start": "START",
-        "stop": "STOP"
-    })
+    await send_text_buttons(update, context, "Hello " + update.message.text,
+                            {
+                                "start": "START",
+                                "stop": "STOP"
+                            })
 
 async def buttons_handler(update, context):
     query = update.callback_query.data
@@ -31,7 +27,6 @@ async def buttons_handler(update, context):
         await send_text(update, context, "Started")
     elif query == "stop":
         await send_text(update, context, "Stopped")
-
 
 app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
