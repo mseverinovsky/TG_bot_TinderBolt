@@ -1,14 +1,30 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Message, BotCommand, MenuButtonCommands, BotCommandScopeChat, MenuButtonDefault
+from telegram import (InlineKeyboardButton, InlineKeyboardMarkup, Message, BotCommand,
+                      MenuButtonCommands, BotCommandScopeChat, MenuButtonDefault)
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes
 
+# завантажує token з папки /resources/tokens/
+def load_token(token_name):
+    try:
+        with open("resources/tokens/" + token_name + ".txt", "r", encoding="utf8") as file:
+            return file.readline()
+    except FileNotFoundError as fe: # File does not exist
+        print(f"System message: {fe}. Exiting...")
+        exit(1)
+    except PermissionError as pe: # You don't have read permissions
+        print(f"{pe}. File can not be open for reading. Exiting...")
+        exit(2)
+    except OSError as oe: # Catch other OS-related issues
+        print(f"Other OS error: {oe}. Exiting...")
+        exit(99)
 
 # конвертує об'єкт user в рядок
 def dialog_user_info_to_str(user) -> str:
     result = ""
-    map = {"name": "Ім'я", "sex": "Стать", "age": "Вік", "city": "Місто", "occupation": "Професія", "hobby": "Хобі", "goals": "Цілі знайомства",
-           "handsome": "Краса, привабливість у балах (максимум 10 балів)", "wealth": "Доход, багатство", "annoys": "У людях дратує"}
+    map = {"name": "Ім'я", "sex": "Стать", "age": "Вік", "city": "Місто", "occupation": "Професія", "hobby": "Хобі",
+           "goals": "Цілі знайомства", "handsome": "Краса, привабливість у балах (максимум 10 балів)",
+           "wealth": "Доход, багатство", "annoys": "У людях дратує"}
     for key, name in map.items():
         if key in user:
             result += name + ": " + user[key] + "\n"

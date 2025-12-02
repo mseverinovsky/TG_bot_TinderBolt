@@ -22,8 +22,7 @@ async def start(update, context):
 async def gpt(update, context):
     dialog.mode = "gpt"
     await send_photo(update, context, "gpt")
-    msg = load_message("gpt")
-    await send_text(update, context, msg)
+    await send_text(update, context, load_message("gpt"))
 
 async def gpt_dialog(update, context):
     text = update.message.text
@@ -35,16 +34,11 @@ async def hello(update, context):
     if dialog.mode == "gpt":
         await gpt_dialog(update, context)
 
-def load_token(token_name):
-    with open("resources/" + token_name + ".txt", "r", encoding="utf8") as file:
-        return file.readline()
-
 dialog = Dialog()
 dialog.mode = None
 
 TOKEN = load_token("token")
 ChatGPT_TOKEN = load_token("ChatGPT_TOKEN")
-
 chatgpt = ChatGptService(ChatGPT_TOKEN)
 
 app = ApplicationBuilder().token(TOKEN).build()
